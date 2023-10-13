@@ -1,11 +1,12 @@
 # Import libraries
 import argparse
+import causallearn
 
 # Import Bayes class
 from bayesNet import NaiveBayes
 
 # Data switch variables
-discrete = True
+gaussian = True
 
 trainSet = ""
 testSet = ""
@@ -14,14 +15,14 @@ testSet = ""
 parser = argparse.ArgumentParser(description="Your program description here")
 
 # Create a mutually exclusive group for flags (-d and -c)
-flag_group = parser.add_mutually_exclusive_group(required=True)
-flag_group.add_argument("-d", action="store_true", help="Use discrete data")
-flag_group.add_argument("-c", action="store_true", help="Use continuous data")
+flagGroup = parser.add_mutually_exclusive_group(required=True)
+flagGroup.add_argument("-d", action="store_true", help="Use discrete data")
+flagGroup.add_argument("-c", action="store_true", help="Use continuous data")
 
 # Create a mutually exclusive group for commands (diabetes and cardio)
-command_group = parser.add_mutually_exclusive_group(required=True)
-command_group.add_argument("--diabetes", action="store_true", help="Specify the diabetes command")
-command_group.add_argument("--cardio", action="store_true", help="Specify the cardio command")
+commandGroup = parser.add_mutually_exclusive_group(required=True)
+commandGroup.add_argument("--diabetes", action="store_true", help="Specify the diabetes command")
+commandGroup.add_argument("--cardio", action="store_true", help="Specify the cardio command")
 
 # Define the mandatory query argument
 parser.add_argument("query", help="Mandatory query")
@@ -30,30 +31,30 @@ parser.add_argument("query", help="Mandatory query")
 args = parser.parse_args()
 
 # Access the values of the arguments
-use_discrete = args.d
-use_continuous = args.c
-diabetes_command = args.diabetes
-cardio_command = args.cardio
+useDiscrete = args.d
+useContinuous = args.c
+diabetesCommand = args.diabetes
+cardioCommand = args.cardio
 query = args.query
 
 # Check the flags and commands
-if use_discrete:
+if useDiscrete:
     print("You chose to use discrete data.")    
-elif use_continuous:
+elif useContinuous:
     print("You chose to use continuous data.")
-    discrete = False
+    gaussian = False
 
-if diabetes_command:
+if diabetesCommand:
     print("You chose the diabetes dataset")
-    if not discrete:
+    if not gaussian:
         trainSet = "../data/diabetes_data-original-train.csv"
         testSet = "../data/diabetes_data-original-test.csv"
     else:
         trainSet = "../data/diabetes_data-discretized-train.csv"
         testSet = "../data/diabetes_data-discretized-test.csv"
-elif cardio_command:
+elif cardioCommand:
     print("You chose the cardiovascular dataset")
-    if not discrete:
+    if not gaussian:
         trainSet = "../data/cardiovascular_data-original-train.csv"
         testSet = "../data/cardiovascular_data-original-test.csv"
     else:
@@ -63,5 +64,20 @@ elif cardio_command:
 # Perform actions based on the mandatory query
 print("Your query:", query)
 
-print(trainSet)
-print(testSet)
+print("Training set location: " + trainSet)
+print("Testing set location: " + testSet)
+
+
+# Create NaiveBayes object
+naiveBayes = NaiveBayes(trainSet, testSet, [args.query])
+
+# Train the NaiveBayes model
+naiveBayes.trainNaiveBayes()
+
+# Evaluate the model
+metrics = naiveBayes.evaluate()
+print(f"Evaluation Metrics: {metrics}")
+
+# Run the query
+queryResults = naiveBayes.runQueries()
+print(f"Query Results: {queryResults}")
