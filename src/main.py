@@ -3,7 +3,7 @@ import argparse
 import causallearn
 
 # Import Bayes class
-from bayesNet import NaiveBayes
+from naiveBayesNet import NaiveBayes
 
 # Data switch variables
 gaussian = True
