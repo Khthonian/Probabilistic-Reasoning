@@ -63,29 +63,29 @@ class NaiveBayes:
         brierScore = brier_score_loss(yTrue, yPred)
         f1 = f1_score(yTrue, yPred)
         return {
-            'Confusion Matrix': cm,
-            'Balanced Accuracy': balancedAcc,
-            'AUC': rocAuc,
-            'Brier Score': brierScore,
-            'F1 Score': f1
+            "Confusion Matrix": cm,
+            "Balanced Accuracy": balancedAcc,
+            "AUC": rocAuc,
+            "Brier Score": brierScore,
+            "F1 Score": f1
         }
     
     # Define a function to parse the user query
     def parseQuery(self, queryStr):
         queryVars = {}
         try:
-            # Remove 'P(' and ')' from the query string
+            # Remove "P(" and ")" from the query string
             queryStr = queryStr[2:-1]
             
             # Extract the target and conditions from the query string
-            targetStr, conditionsStr = queryStr.split('|')
-            targetVar, targetValue = targetStr.split('=')
+            targetStr, conditionsStr = queryStr.split("|")
+            targetVar, targetValue = targetStr.split("=")
             
             # Parse the multiple conditionals
-            conditionals = conditionsStr.split(',')
+            conditionals = conditionsStr.split(",")
             
             for conditional in conditionals:
-                var, value = conditional.split('=')
+                var, value = conditional.split("=")
                 queryVars[var.strip()] = int(value.strip())
             
             # Add the target variable to the queryVars dictionary
