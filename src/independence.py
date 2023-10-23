@@ -3,6 +3,7 @@
 # Import libraries
 from causallearn.utils.cit import CIT
 
+
 class Independence:
     # Object to store the CIT instance
     chiSquaredObj = None
@@ -32,7 +33,7 @@ class Independence:
                     # Assign the variable names
                     self.randomVariables = line.split(",")
                 else:
-                    # The remaining content is data 
+                    # The remaining content is data
                     values = line.split(",")
                     self.randomVariablesAll.append(values)
         return self.randomVariablesAll
