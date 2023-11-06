@@ -1,37 +1,48 @@
-from collections import defaultdict
-from pcstable import generateDAG  
+# Import libraries
+from pcstable import generateDAG
 
-def writeConfigFile(graph, fileName, modelName):
+import networkx as nx
+
+
+def writeConfigFile(graph: nx.DiGraph, fileName: str, modelName: str):
+    """
+    A function to write a configuration file for the given DAG.
+
+    Parameters:
+    - graph (nx.DiGraph): The DAG for which to write the configuration file.
+    - fileName (str): The path to the output configuration file.
+    - modelName (str): The name of the model to be written into the configuration file.
+    """
+
+    # Perform topological sort
+    sortedNodes = list(nx.topological_sort(graph))
+
     with open(fileName, 'w', encoding='utf-8') as f:
         # Write the model name
         f.write(f"name:{modelName}\n\n")
-        
-        # Write the random variables
-        randomVariables = ";".join([f"{node.strip()}({node.strip()})" for node in graph.nodes()])
+
+        # Write the random variables (in topological order)
+        randomVariables = ";".join(
+            [f"{node.strip()}({node.strip()})" for node in sortedNodes])
         f.write(f"random_variables:{randomVariables}\n\n")
-        
-        # Write the structure
-        structureDict = defaultdict(list)
-        for edge in graph.edges():
-            parent, child = edge
-            structureDict[child].append(parent)
-        
-        structure = []
-        for child, parents in structureDict.items():
-            parentsStr = ",".join(parents)
-            structure.append(f"P({child}|{parentsStr})")
-        
-        # Adding nodes with no parents
-        noParentNodes = set(graph.nodes()) - set(structureDict.keys())
-        for node in noParentNodes:
-            structure.append(f"P({node})")
-        
-        structureStr = ";".join(structure)
-        f.write(f"structure:{structureStr}\n")
+
+        # Write the marginal probabilities first
+        marginalProb = ";".join(
+            [f"P({node.strip()})" for node in sortedNodes if not list(graph.predecessors(node))])
+
+        # Write the conditional probabilities
+        conditionalProb = ";".join(
+            [f"P({node.strip()}|{','.join(graph.predecessors(node)).strip()})" for node in sortedNodes if list(graph.predecessors(node))])
+
+        # Combine marginal and conditional probabilities into the final structure string
+        structure = f"{marginalProb};{conditionalProb}" if marginalProb else conditionalProb
+        f.write(f"structure:{structure}\n\n")
+
 
 # Generate the graph using the function from pcstable.py
-DG = generateDAG("../data/diabetes_data-discretized-train.csv")  # Replace with your actual path
+# TODO: Replace with dynamic path
+DG = generateDAG("../data/diabetes_data-discretized-train.csv")
 
 # Write the config file
-writeConfigFile(DG, "../config/modelConfig.txt", "YourModelName")  # Replace with your actual path and model name
-
+# TODO: Replace with dynamic path and model name
+writeConfigFile(DG, "../config/modelConfig.txt", "YourModelName")
