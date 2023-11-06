@@ -1,6 +1,5 @@
 # Import libraries
 import argparse
-import causallearn
 
 # Import Bayes class
 from naiveBayesNet import NaiveBayes
@@ -21,8 +20,10 @@ flagGroup.add_argument("-c", action="store_true", help="Use continuous data")
 
 # Create a mutually exclusive group for commands (diabetes and cardio)
 commandGroup = parser.add_mutually_exclusive_group(required=True)
-commandGroup.add_argument("--diabetes", action="store_true", help="Specify the diabetes command")
-commandGroup.add_argument("--cardio", action="store_true", help="Specify the cardio command")
+commandGroup.add_argument(
+    "--diabetes", action="store_true", help="Specify the diabetes command")
+commandGroup.add_argument("--cardio", action="store_true",
+                          help="Specify the cardio command")
 
 # Define the mandatory query argument
 parser.add_argument("query", help="Mandatory query")
@@ -39,7 +40,7 @@ query = args.query
 
 # Check the flags and commands
 if useDiscrete:
-    print("You chose to use discrete data.")    
+    print("You chose to use discrete data.")
 elif useContinuous:
     print("You chose to use continuous data.")
     gaussian = False
@@ -63,7 +64,6 @@ elif cardioCommand:
 
 # Perform actions based on the mandatory query
 print("Your query:", query)
-
 print("Training set location: " + trainSet)
 print("Testing set location: " + testSet)
 

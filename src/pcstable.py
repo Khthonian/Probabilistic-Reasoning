@@ -6,14 +6,37 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 
-displayGraph = True
+displayGraph = False  # TODO: Set this boolean from main script
 
-# Define a function to find all subsets of a given set
+
 def findSubsets(S, m):
+    """
+    A function to find all subsets of a given set.
+
+    Parameters:
+    - S (set): The original set from which subsets will be generated.
+    - m (int): The size of each subset.
+
+    Returns:
+    - (list of set): A list of subsets from S, each of size m.
+    """
+
     return [set(combo) for combo in combinations(S, m)]
 
-# Define a function to check if orienting an edge would create a cycle
+
 def formsCycle(DG, start, end):
+    """
+    A function to check if orienting an edge would create a cycle.
+
+    Parameters:
+    - DG (nx.DiGraph): The directed graph in which to check for cycles.
+    - start (node): The start node of the potential edge.
+    - end (node): The end node of the potential edge.
+
+    Returns:
+    - (bool): A boolean that is True if the potential edge creates a cycle.
+    """
+
     # Temporarily add the directed edge
     DG.add_edge(start, end)
 
@@ -27,8 +50,15 @@ def formsCycle(DG, start, end):
         # No cycle found, keep the edge and return False
         return False
 
-# Define a function to remove all cycles from the graph
+
 def removeCycles(DG):
+    """
+    A function to remove all cycles from the graph.
+
+    Parameters:
+    - DG (nx.DiGraph): The directed graph in which to check for cycles.
+    """
+
     while True:
         try:
             cycle = nx.find_cycle(DG, orientation="original")
@@ -38,6 +68,16 @@ def removeCycles(DG):
 
 
 def generateDAG(dataFile):
+    """
+    A function to generate a DAG using the PC-Stable algorithm.
+
+    Parameters:
+    - dataFile (str): The path to the data file used for generating the DAG.
+
+    Returns:
+    - (nx.DiGraph): The generated DAG.
+    """
+
     # Initialise Independence object
     independenceTest = Independence(dataFile)
 
@@ -86,7 +126,8 @@ def generateDAG(dataFile):
     for node in DG.nodes():
         neighbours = list(DG.neighbors(node)) + list(DG.predecessors(node))
         for neighbour1, neighbour2 in combinations(neighbours, 2):
-            pValue = independenceTest.computePValue(neighbour1, neighbour2, [node])
+            pValue = independenceTest.computePValue(
+                neighbour1, neighbour2, [node])
             if pValue > 0.05:
                 # Check if adding the edge would create a cycle
                 if not formsCycle(DG, neighbour1, node) and not formsCycle(DG, neighbour2, node):
@@ -99,12 +140,13 @@ def generateDAG(dataFile):
         shellPos = nx.shell_layout(DG)
 
         # Draw nodes and labels
-        nx.draw_networkx_nodes(DG, shellPos, node_color="lightblue", node_size=1000)
+        nx.draw_networkx_nodes(
+            DG, shellPos, node_color="lightblue", node_size=1000)
         nx.draw_networkx_labels(DG, shellPos, font_size=12, font_weight="bold")
 
         # Draw edges with arrows
         nx.draw_networkx_edges(DG, shellPos, edge_color="k",
-                            arrows=True, arrowsize=20, connectionstyle="arc3,rad=0.2")
+                               arrows=True, arrowsize=20, connectionstyle="arc3,rad=0.2")
 
         # Turn off the axis for a cleaner look
         plt.axis("off")
@@ -112,4 +154,3 @@ def generateDAG(dataFile):
         plt.show()
 
     return DG
-
