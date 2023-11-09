@@ -1,4 +1,5 @@
 # Import libraries
+from naive import generateNaiveDAG
 from pcstable import generateDAG
 
 import networkx as nx
@@ -41,7 +42,16 @@ def writeConfigFile(graph: nx.DiGraph, fileName: str, modelName: str):
 
 # Generate the graph using the function from pcstable.py
 # TODO: Replace with dynamic path
-DG = generateDAG("../data/diabetes_data-discretized-train.csv")
+fileName = "../data/diabetes_data-original-train.csv"
+
+naiveStructure = False  # TODO: Set flag from main file
+
+DG = None
+
+if naiveStructure:
+    DG = generateNaiveDAG(fileName)
+else:
+    DG = generateDAG(fileName)
 
 # Write the config file
 # TODO: Replace with dynamic path and model name
