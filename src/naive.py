@@ -6,7 +6,7 @@ import networkx as nx
 displayGraph = False  # TODO: Set this boolean from main script
 
 
-def generateNaiveDAG(dataFile):
+def generateNaiveDAG(dataFile: str):
     """
     A function to generate a DAG for a Naive Bayes structure.
 
