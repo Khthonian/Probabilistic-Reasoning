@@ -1,8 +1,9 @@
+# Import libraries
+from math import log
+
 import pandas as pd
 import numpy as np
 import networkx as nx
-from math import log
-from pcstable import generateDAG
 
 
 def scoreFunction(DAG: nx.DiGraph, data: str):
@@ -52,4 +53,3 @@ def scoreFunction(DAG: nx.DiGraph, data: str):
 
     print(logLikelihood)
     print(bic)  # TODO: Return the values
-

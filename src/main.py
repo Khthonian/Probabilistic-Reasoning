@@ -1,83 +1,82 @@
 # Import libraries
-import argparse
+from configGenerator import generateConfig
+from cleanBOM import cleanBOM
+from parse import createParser
 
-# Import Bayes class
-from naiveBayesNet import NaiveBayes
 
-# Data switch variables
-gaussian = True
+# Declare the path of the config file
+configFile = "../config/modelConfig.txt"
 
-trainSet = ""
-testSet = ""
 
-# Create a parser object
-parser = argparse.ArgumentParser(description="Your program description here")
+def selectData(useContinuous: bool, useDiabetes: bool, useCardio: bool):
+    # Declare variables to store dataset paths
+    trainSet, testSet, modelName = None
 
-# Create a mutually exclusive group for flags (-d and -c)
-flagGroup = parser.add_mutually_exclusive_group(required=True)
-flagGroup.add_argument("-d", action="store_true", help="Use discrete data")
-flagGroup.add_argument("-c", action="store_true", help="Use continuous data")
+    # Select dataset
+    if useDiabetes:
+        print("You chose the diabetes dataset")
+        if not useContinuous:
+            trainSet = "../data/diabetes_data-original-train.csv"
+            testSet = "../data/diabetes_data-original-test.csv"
+        else:
+            trainSet = "../data/diabetes_data-discretized-train.csv"
+            testSet = "../data/diabetes_data-discretized-test.csv"
+        modelName = "Diabetes Model"
+    elif useCardio:
+        print("You chose the cardiovascular dataset")
+        if not useContinuous:
+            trainSet = "../data/cardiovascular_data-original-train.csv"
+            testSet = "../data/cardiovascular_data-original-test.csv"
+        else:
+            trainSet = "../data/cardiovascular_data-discretized-train.csv"
+            testSet = "../data/cardiovascular_data-discretized-test.csv"
+        modelName = "Cardiovascular Model"
 
-# Create a mutually exclusive group for commands (diabetes and cardio)
-commandGroup = parser.add_mutually_exclusive_group(required=True)
-commandGroup.add_argument(
-    "--diabetes", action="store_true", help="Specify the diabetes command")
-commandGroup.add_argument("--cardio", action="store_true",
-                          help="Specify the cardio command")
+    # Clean BOM from train/test set
+    cleanBOM(trainSet)
+    cleanBOM(testSet)
 
-# Define the mandatory query argument
-parser.add_argument("query", help="Mandatory query")
+    return trainSet, testSet, modelName
 
-# Parse the command-line arguments
-args = parser.parse_args()
 
-# Access the values of the arguments
-useDiscrete = args.d
-useContinuous = args.c
-diabetesCommand = args.diabetes
-cardioCommand = args.cardio
-query = args.query
+def main():
+    # Create a parser object
+    parser = createParser()
 
-# Check the flags and commands
-if useDiscrete:
-    print("You chose to use discrete data.")
-elif useContinuous:
-    print("You chose to use continuous data.")
-    gaussian = False
+    # Parse the CLI arguments
+    args = parser.parse_args()
 
-if diabetesCommand:
-    print("You chose the diabetes dataset")
-    if not gaussian:
-        trainSet = "../data/diabetes_data-original-train.csv"
-        testSet = "../data/diabetes_data-original-test.csv"
+    # Access the values of the arguments
+    useGaussian = args.g
+    useInferEnumerate = args.i
+    useRejection = args.r
+    useCardio = args.c
+    useDiabetes = args.d
+    useContinuous = args.C
+    useNaive = args.n
+    useScore = args.s
+
+    # Declare a variable for the query
+    query = None
+
+    # Check the flags
+    if useGaussian or useInferEnumerate or useRejection:
+        query = input("Enter a query e.g. P(X|A,B): ")
+        print("Your query: ", query)
+
+    # Select datasets
+    trainSet, testSet, modelName = selectData(
+        useContinuous, useDiabetes, useCardio)
+    print("Train set path: " + trainSet)
+    print("Test set path: " + testSet)
+
+    # Generate model
+    generateConfig(trainSet, modelName, useNaive, useScore)
+
+    # Select CPT or PDF generation
+    if useGaussian:
+        # Insert logic to run PDF generator
     else:
-        trainSet = "../data/diabetes_data-discretized-train.csv"
-        testSet = "../data/diabetes_data-discretized-test.csv"
-elif cardioCommand:
-    print("You chose the cardiovascular dataset")
-    if not gaussian:
-        trainSet = "../data/cardiovascular_data-original-train.csv"
-        testSet = "../data/cardiovascular_data-original-test.csv"
-    else:
-        trainSet = "../data/cardiovascular_data-discretized-train.csv"
-        testSet = "../data/cardiovascular_data-discretized-test.csv"
+        # Insert logic to run CPT generator
 
-# Perform actions based on the mandatory query
-print("Your query:", query)
-print("Training set location: " + trainSet)
-print("Testing set location: " + testSet)
-
-
-# Create NaiveBayes object
-naiveBayes = NaiveBayes(trainSet, testSet, [args.query])
-
-# Train the NaiveBayes model
-naiveBayes.trainNaiveBayes()
-
-# Evaluate the model
-metrics = naiveBayes.evaluate()
-print(f"Evaluation Metrics: {metrics}")
-
-# Run the query
-queryResults = naiveBayes.runQueries()
-print(f"Query Results: {queryResults}")
+        # TODO: Implement logic for inferences and model evaluation

@@ -1,5 +1,4 @@
 # Import libraries
-from cleanBOM import cleanBOM
 from naive import generateNaiveDAG
 from pcstable import generateDAG
 from score import scoreFunction
@@ -42,26 +41,29 @@ def writeConfigFile(graph: nx.DiGraph, fileName: str, modelName: str):
         f.write(f"structure:{structure}\n\n")
 
 
-# Generate the graph using the function from pcstable.py
-# TODO: Replace with dynamic path
-fileName = "../data/diabetes_data-discretized-train.csv"
+def generateConfig(fileName: str, modelName: str, naive: bool, score: bool):
+    """
+    A function to handle the configuration and generation process.
 
-# Clean the BOM from the input file
-cleanBOM(fileName)
+    Parameters:
+    - fileName (str): The path to the output configuration file.
+    - modelName (str): The name of the model to be written into the configuration file.
+    - naive (bool): A flag to handle the structure learning.
+    - score (bool): A flag to handle score calculation.
+    """
 
-naiveStructure = False  # TODO: Set flag from main file
+    # Declare a variable to hold the DAG
+    DG = None
 
-# Declare a variable to hold the DAG
-DG = None
+    if naive:
+        DG = generateNaiveDAG(fileName)
+    else:
+        DG = generateDAG(fileName)
 
-if naiveStructure:
-    DG = generateNaiveDAG(fileName)
-else:
-    DG = generateDAG(fileName)
+    if score:
+        # Get the LL and BIC scores from the DAG
+        scoreFunction(DG, fileName)
 
-# Get the LL and BIC scores from the DAG
-scoreFunction(DG, fileName)  # TODO: Declare a flag for score calculation
-
-# Write the config file
-# TODO: Replace with dynamic path and model name
-writeConfigFile(DG, "../config/modelConfig.txt", "YourModelName")
+    # Write the config file
+    # TODO: Replace with dynamic path and model name
+    writeConfigFile(DG, "../config/modelConfig.txt", modelName)
