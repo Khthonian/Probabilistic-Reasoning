@@ -1,6 +1,8 @@
 # Import libraries
+from cleanBOM import cleanBOM
 from naive import generateNaiveDAG
 from pcstable import generateDAG
+from score import scoreFunction
 
 import networkx as nx
 
@@ -42,16 +44,23 @@ def writeConfigFile(graph: nx.DiGraph, fileName: str, modelName: str):
 
 # Generate the graph using the function from pcstable.py
 # TODO: Replace with dynamic path
-fileName = "../data/diabetes_data-original-train.csv"
+fileName = "../data/diabetes_data-discretized-train.csv"
+
+# Clean the BOM from the input file
+cleanBOM(fileName)
 
 naiveStructure = False  # TODO: Set flag from main file
 
+# Declare a variable to hold the DAG
 DG = None
 
 if naiveStructure:
     DG = generateNaiveDAG(fileName)
 else:
     DG = generateDAG(fileName)
+
+# Get the LL and BIC scores from the DAG
+scoreFunction(DG, fileName)  # TODO: Declare a flag for score calculation
 
 # Write the config file
 # TODO: Replace with dynamic path and model name
