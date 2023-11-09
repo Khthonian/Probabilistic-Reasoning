@@ -11,7 +11,7 @@ class Independence:
     The class provides methods to read data, identify variable indices, and compute p-values for independence tests between variables.
     """
 
-    def __init__(self, fileName):
+    def __init__(self, fileName: str):
         """
         A function to initialise the Independence object by reading in data from a CSV file.
 
@@ -34,7 +34,7 @@ class Independence:
         # Initialise the CIT object
         self.chiSquaredObj = CIT(data, test)
 
-    def readData(self, fileName):
+    def readData(self, fileName: str):
         """
         A function to read and parse the datafile.
 
@@ -60,7 +60,7 @@ class Independence:
                     self.randomVariablesAll.append(values)
         return self.randomVariablesAll
 
-    def getVariableIndex(self, targetVariable):
+    def getVariableIndex(self, targetVariable: str):
         """
         A function to get the variable index of a given target variable.
 
@@ -76,7 +76,7 @@ class Independence:
                 return i
         return None
 
-    def getVariableIndices(self, parentVariables):
+    def getVariableIndices(self, parentVariables: list):
         """
         A function to get the variable indices of the given parent variables.
 
@@ -95,7 +95,7 @@ class Independence:
                 indexVector.append(self.getVariableIndex(parent))
             return indexVector
 
-    def computePValue(self, x, y, z):
+    def computePValue(self, x: str, y: str, z: list):
         """
         A function to compute the P value for a set of variables.
 
