@@ -34,8 +34,6 @@ def generateNaiveDAG(dataFile):
     for col in columnNames[:-1]:
         DG.add_edge(lastCol, col)
 
-    print(DG.edges())
-
     if displayGraph:
         shellPos = nx.shell_layout(DG)
 
@@ -50,5 +48,7 @@ def generateNaiveDAG(dataFile):
 
         # Turn off the axis for a cleaner look
         plt.axis("off")
-        plt.title("Directed Graph after PC-Stable Algorithm")
+        plt.title("Directed Graph after Naive Generation")
         plt.show()
+
+    return DG
