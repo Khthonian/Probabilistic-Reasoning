@@ -18,7 +18,6 @@ def scoreFunction(DAG: nx.DiGraph, data: str):
     dataDF = pd.read_csv(data, encoding='utf-8-sig')
     dataDF.columns = [col.encode('utf-8').decode('utf-8-sig')
                       if col.startswith('\ufeff') else col for col in dataDF.columns]
-    print(dataDF.columns)
 
     # Initialise LL and parameter count
     logLikelihood = 0
@@ -26,7 +25,6 @@ def scoreFunction(DAG: nx.DiGraph, data: str):
 
     # For each node, estimate its CPT given its parents in the DAG
     for node in DAG.nodes:
-        print(f"Node: '{node}'")
         parents = list(DAG.predecessors(node))
         if not parents:
             # Calculate frequencies and probabilities
@@ -55,6 +53,3 @@ def scoreFunction(DAG: nx.DiGraph, data: str):
     print(logLikelihood)
     print(bic)  # TODO: Return the values
 
-
-scoreFunction(generateDAG('../data/diabetes_data-discretized-train.csv'),
-              '../data/diabetes_data-discretized-train.csv')
