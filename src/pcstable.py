@@ -9,7 +9,7 @@ import networkx as nx
 displayGraph = False  # TODO: Set this boolean from main script
 
 
-def findSubsets(S, m):
+def findSubsets(S: set, m: int):
     """
     A function to find all subsets of a given set.
 
@@ -24,7 +24,7 @@ def findSubsets(S, m):
     return [set(combo) for combo in combinations(S, m)]
 
 
-def formsCycle(DG, start, end):
+def formsCycle(DG: nx.DiGraph, start:str, end:str):
     """
     A function to check if orienting an edge would create a cycle.
 
@@ -51,7 +51,7 @@ def formsCycle(DG, start, end):
         return False
 
 
-def removeCycles(DG):
+def removeCycles(DG: nx.DiGraph):
     """
     A function to remove all cycles from the graph.
 
@@ -67,7 +67,7 @@ def removeCycles(DG):
             break
 
 
-def generateDAG(dataFile):
+def generateDAG(dataFile: str):
     """
     A function to generate a DAG using the PC-Stable algorithm.
 
