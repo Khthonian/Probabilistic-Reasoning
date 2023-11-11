@@ -1,36 +1,38 @@
 # Import libraries
-from configGenerator import generateConfig
 from cleanBOM import cleanBOM
+from configGenerator import generateConfig
+from CPT_Generator import CPT_Generator
 from parse import createParser
+from PDF_Generator import PDF_Generator
 
-
-# Declare the path of the config file
-configFile = "../config/modelConfig.txt"
+import time
 
 
 def selectData(useContinuous: bool, useDiabetes: bool, useCardio: bool):
     # Declare variables to store dataset paths
-    trainSet, testSet, modelName = None
+    trainSet, testSet, modelName = (None, None, None)
 
     # Select dataset
     if useDiabetes:
         print("You chose the diabetes dataset")
-        if not useContinuous:
+        if useContinuous:
             trainSet = "../data/diabetes_data-original-train.csv"
             testSet = "../data/diabetes_data-original-test.csv"
+            modelName = "Original Diabetes Model"
         else:
             trainSet = "../data/diabetes_data-discretized-train.csv"
             testSet = "../data/diabetes_data-discretized-test.csv"
-        modelName = "Diabetes Model"
+            modelName = "Discretized Diabetes Model"
     elif useCardio:
         print("You chose the cardiovascular dataset")
-        if not useContinuous:
+        if useContinuous:
             trainSet = "../data/cardiovascular_data-original-train.csv"
             testSet = "../data/cardiovascular_data-original-test.csv"
+            modelName = "Original Cardiovascular Model"
         else:
             trainSet = "../data/cardiovascular_data-discretized-train.csv"
             testSet = "../data/cardiovascular_data-discretized-test.csv"
-        modelName = "Cardiovascular Model"
+            modelName = "Discretized Cardiovascular Model"
 
     # Clean BOM from train/test set
     cleanBOM(trainSet)
@@ -40,6 +42,8 @@ def selectData(useContinuous: bool, useDiabetes: bool, useCardio: bool):
 
 
 def main():
+    configFile = "../config/modelConfig.txt"
+
     # Create a parser object
     parser = createParser()
 
@@ -47,22 +51,11 @@ def main():
     args = parser.parse_args()
 
     # Access the values of the arguments
-    useGaussian = args.g
-    useInferEnumerate = args.i
-    useRejection = args.r
-    useCardio = args.c
-    useDiabetes = args.d
-    useContinuous = args.C
-    useNaive = args.n
-    useScore = args.s
-
-    # Declare a variable for the query
-    query = None
-
-    # Check the flags
-    if useGaussian or useInferEnumerate or useRejection:
-        query = input("Enter a query e.g. P(X|A,B): ")
-        print("Your query: ", query)
+    useCardio = args.cardio
+    useDiabetes = args.diabetes
+    useContinuous = args.continuous
+    useNaive = args.naive
+    useScore = args.score
 
     # Select datasets
     trainSet, testSet, modelName = selectData(
@@ -73,10 +66,23 @@ def main():
     # Generate model
     generateConfig(trainSet, modelName, useNaive, useScore)
 
-    # Select CPT or PDF generation
-    if useGaussian:
-        # Insert logic to run PDF generator
-    else:
-        # Insert logic to run CPT generator
+    # Declare training time variables
+    startTime, endTime = (None, None)
 
-        # TODO: Implement logic for inferences and model evaluation
+    # Select CPT or PDF generation
+    print(useContinuous)
+    if useContinuous:
+        startTime = time.time()
+        PDF_Generator(configFile, trainSet)
+        endTime = time.time()
+    else:
+        startTime = time.time()
+        CPT_Generator(configFile, trainSet)
+        endTime = time.time()
+
+    executeTime = endTime - startTime
+    print("Training Time: ", executeTime, " seconds")
+
+
+if __name__ == "__main__":
+    main()
