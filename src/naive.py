@@ -3,10 +3,8 @@ import csv
 import matplotlib.pyplot as plt
 import networkx as nx
 
-displayGraph = False  # TODO: Set this boolean from main script
 
-
-def generateNaiveDAG(dataFile: str):
+def generateNaiveDAG(dataFile: str, displayGraph: bool):
     """
     A function to generate a DAG for a Naive Bayes structure.
 

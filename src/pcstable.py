@@ -6,9 +6,6 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 
-displayGraph = False  # TODO: Set this boolean from main script
-
-
 def findSubsets(S: set, m: int):
     """
     A function to find all subsets of a given set.
@@ -24,7 +21,7 @@ def findSubsets(S: set, m: int):
     return [set(combo) for combo in combinations(S, m)]
 
 
-def formsCycle(DG: nx.DiGraph, start:str, end:str):
+def formsCycle(DG: nx.DiGraph, start: str, end: str):
     """
     A function to check if orienting an edge would create a cycle.
 
@@ -67,7 +64,7 @@ def removeCycles(DG: nx.DiGraph):
             break
 
 
-def generateDAG(dataFile: str):
+def generateDAG(dataFile: str, displayGraph: bool):
     """
     A function to generate a DAG using the PC-Stable algorithm.
 
