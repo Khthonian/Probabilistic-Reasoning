@@ -36,8 +36,9 @@ class GaussianProcess():
     running_time = None # execution time for training+test
     baseline_variant1 = False # use baseline discussed in lecture
 
-    def __init__(self, datafile_train, datafile_test):
+    def __init__(self, datafile_train, datafile_test, sample_size):
         # Load training and test data from two separate CVS files
+        self.sample_size = sample_size
         X_train, Y_train = self.loadCVSFile(datafile_train)
         X_test, Y_test = self.loadCVSFile(datafile_test)
 		
@@ -54,7 +55,9 @@ class GaussianProcess():
         start_reading = False
         with open(fileName) as f:
             lines = f.readlines()
-            for line in lines:
+            totalLines = len(lines)
+            sampleLines = int(totalLines * self.sample_size)
+            for line in lines[:sampleLines]:
                 line = line.strip()
                 if not start_reading:
                     # ignore the header/first line
@@ -119,11 +122,12 @@ class GaussianProcess():
         print("Running Time="+str(self.running_time)+" secs.")
 
 
-if len(sys.argv) != 3:
-    print("USAGE: GaussignProcess.py [training_file.csv] [test_file.csv]")
-    print("EXAMPLE> GaussignProcess.py data_banknote_authentication-train.csv data_banknote_authentication-test.csv")
+if len(sys.argv) < 3 or len(sys.argv) > 4:
+    print("USAGE: GaussignProcess.py [training_file.csv] [test_file.csv] (sample_size)")
+    print("EXAMPLE> GaussianProcess.py data_banknote_authentication-train.csv data_banknote_authentication-test.csv")
     exit(0)
 else:
     datafile_train = sys.argv[1]
     datafile_test = sys.argv[2]
-    GaussianProcess(datafile_train, datafile_test)
+    sample_size = float(sys.argv[3]) if len(sys.argv) == 4 else 1.0
+    GaussianProcess(datafile_train, datafile_test, sample_size)
