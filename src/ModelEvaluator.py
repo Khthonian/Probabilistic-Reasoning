@@ -69,73 +69,6 @@ class ModelEvaluator(BayesNetInference):
         true, pred, prob = self.get_true_and_predicted_targets(nb_tester)
         self.inference_time = time.time() - self.inference_time
         self.compute_performance(nb_tester, true, pred, prob)
-        self.calculate_scoring_functions(nb_fitted)
-
-    # calculates scores based on metrics Log Likelihood (LL) and
-    # Bayesian Information Criterion (BIC). Note that BIC extends 
-    # LL with a penalty factor.
-    def calculate_scoring_functions(self, nbc):
-        if not self.bn: return
-        print("\nCALCULATING LL and BIC on training data...")
-        LL = self.calculate_log_lilelihood(nbc)
-        BIC = self.calculate_bayesian_information_criterion(LL, nbc)
-        print("LL score="+str(LL))
-        print("BIC score="+str(BIC))
-
-    # calculates LL scores but only for Naive Bayes classifiers.
-    # You need to provide support for this to work with Bayes nets,
-    # see comment below for a hint on what is needed.
-    def calculate_log_lilelihood(self, nbc):
-        LL = 0
-
-        if self.useBayesNet:
-            print("===============================================================")
-            print("WARNING: This method currently works for discrete Naive Bayes! ")
-            print(" You need to extend it to be able to work with Bayes nets.     ")
-            print("===============================================================")
-            return None
- 
-        # iterates over all data points (instances) in the training data
-        for instance in nbc.rv_all_values:
-            predictor_value = instance[len(instance)-1]
-
-            # iterates over all random variables except the predictor variable
-            for value_index in range(0, len(instance)-1):
-                variable = nbc.rand_vars[value_index]
-                value = instance[value_index]
-                parent = bnu.get_parents(variable, self.bn)
-				###############################################
-				## the following line should be updated in   ##
-				## the case of multiple parents -- currently ##
-				## only one parent is taken into account.    ##
-				###############################################
-                evidence = {parent: predictor_value}
-                prob = bnu.get_probability_given_parents(variable, value, evidence, self.bn)
-                LL += math.log(prob)
-
-            # accumulates the log prob of the predictor variable
-            variable = nbc.predictor_variable
-            value = predictor_value
-            prob = bnu.get_probability_given_parents(variable, value, {}, self.bn)
-            LL += math.log(prob)
-			
-            if self.verbose == True:
-                print("LL: %s -> %f" % (instance, LL))
-
-        return LL
-
-    def calculate_bayesian_information_criterion(self, LL, nbc):
-        if LL is None:
-            return
-
-        penalty = 0
-        for variable in nbc.rand_vars:
-            num_params = bnu.get_number_of_probabilities(variable, self.bn)
-            local_penalty = (math.log(nbc.num_data_instances)*num_params)/2
-            penalty += local_penalty
-
-        BIC = LL - penalty
-        return BIC
 
     def get_true_and_predicted_targets(self, nbc):
         print("\nCARRYING-OUT probabilistic inference on test data...")
@@ -243,10 +176,8 @@ class ModelEvaluator(BayesNetInference):
 		
         try:
             if nbc != None and not self.useBayesNet:
-                print("Training Time="+str(nbc.training_time)+" secs.")
                 print("Inference Time="+str(nbc.inference_time)+" secs.")
             else:
-                print("Training Time=this number should come from the CPT_Generator!")
                 print("Inference Time="+str(self.inference_time)+" secs.")
         except Exception:
             pass
