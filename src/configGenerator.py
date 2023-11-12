@@ -68,8 +68,7 @@ def generateConfig(configFile: str, trainSet: str, modelName: str, naive: bool, 
         # Get the LL and BIC scores from the DAG
         LL, BIC = scoreFunction(DG, trainSet)
 
-    return (LL, BIC)
-
     # Write the config file
-    # TODO: Replace with dynamic path and model name
     writeConfigFile(DG, configFile, modelName)
+
+    return (LL, BIC)
