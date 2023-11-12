@@ -56,6 +56,7 @@ def main():
     useContinuous = args.continuous
     useNaive = args.naive
     useScore = args.score
+    useGraph = args.graph
 
     # Select datasets
     trainSet, testSet, modelName = selectData(
@@ -64,7 +65,7 @@ def main():
     print("Test set path: " + testSet)
 
     # Generate model
-    LL, BIC = generateConfig(configFile, trainSet, modelName, useNaive, useScore)
+    LL, BIC = generateConfig(configFile, trainSet, modelName, useNaive, useScore, useGraph)
 
     # Declare training time variables
     startTime, endTime = (None, None)

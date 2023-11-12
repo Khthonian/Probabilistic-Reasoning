@@ -27,4 +27,7 @@ def createParser():
     parser.add_argument("-s", "--score", action="store_true",
                         help="Calculate LL and BIC scores.")
 
+    parser.add_argument("-g", "--graph", action="store_true",
+                        help="Display the structure graph.")
+
     return parser
