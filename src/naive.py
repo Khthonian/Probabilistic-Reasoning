@@ -10,6 +10,7 @@ def generateNaiveDAG(dataFile: str, displayGraph: bool):
 
     Parameters:
     - dataFile (str): The path to the data file used for generate the DAG.
+    - displayGraph (bool): A flag to handle graph display.
 
     Returns:
     - (nx.DiGraph): The generated DAG.
