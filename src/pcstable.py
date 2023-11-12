@@ -70,6 +70,7 @@ def generateDAG(dataFile: str, displayGraph: bool):
 
     Parameters:
     - dataFile (str): The path to the data file used for generating the DAG.
+    - displayGraph (bool): A flag to handle graph display.
 
     Returns:
     - (nx.DiGraph): The generated DAG.
