@@ -168,13 +168,3 @@ class PDF_Generator(BayesNetReader, NB_Classifier):
         with open(regression_models_filename, 'wb') as models_file:
             pickle.dump(regression_models, models_file)
 
-
-if len(sys.argv) != 3:
-    print("USAGE: PDF_Generator.py [your_config_file.txt] [training_file.csv]")
-    print("EXAMPLE> PDF_Generator.py config_banknote_authentication.txt data_banknote_authentication-train.csv")
-    exit(0)
-
-else:
-    configfile_name = sys.argv[1]
-    datafile_name = sys.argv[2]
-    PDF_Generator(configfile_name, datafile_name)
