@@ -64,7 +64,7 @@ def main():
     print("Test set path: " + testSet)
 
     # Generate model
-    generateConfig(trainSet, modelName, useNaive, useScore)
+    LL, BIC = generateConfig(configFile, trainSet, modelName, useNaive, useScore)
 
     # Declare training time variables
     startTime, endTime = (None, None)
@@ -82,6 +82,9 @@ def main():
 
     executeTime = endTime - startTime
     print("Training Time: ", executeTime, " seconds")
+    if useScore:
+        print("LL Score: ", LL)
+        print("BIC Score: ", BIC)
 
 
 if __name__ == "__main__":
