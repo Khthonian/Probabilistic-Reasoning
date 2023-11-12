@@ -45,11 +45,8 @@ class PDF_Generator(BayesNetReader, NB_Classifier):
 
         # model training and saving, which updates the text file
         # configfile_name and generates an equivalent *.pkl file 
-        self.running_time = time.time()
         self.estimate_regression_models()
         self.update_configuration_file(configfile_name)
-        self.running_time = time.time() - self.running_time
-        print("Running Time="+str(self.running_time)+" secs.")
 
     # computes the following for each random variable in the network:
 	# (a) mean and standard deviation
