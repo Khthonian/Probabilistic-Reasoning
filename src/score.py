@@ -51,5 +51,4 @@ def scoreFunction(DAG: nx.DiGraph, data: str):
     n = len(dataDF)
     bic = logLikelihood - (log(n) / 2) * numParameters
 
-    print(logLikelihood)
-    print(bic)  # TODO: Return the values
+    return (logLikelihood, bic)

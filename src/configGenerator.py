@@ -41,12 +41,13 @@ def writeConfigFile(graph: nx.DiGraph, fileName: str, modelName: str):
         f.write(f"structure:{structure}\n\n")
 
 
-def generateConfig(fileName: str, modelName: str, naive: bool, score: bool):
+def generateConfig(configFile: str, trainSet: str, modelName: str, naive: bool, score: bool):
     """
     A function to handle the configuration and generation process.
 
     Parameters:
-    - fileName (str): The path to the output configuration file.
+    - configFile (str): The path to the output configuration file.
+    - trainSet (str): The path to the training set file.
     - modelName (str): The name of the model to be written into the configuration file.
     - naive (bool): A flag to handle the structure learning.
     - score (bool): A flag to handle score calculation.
@@ -55,15 +56,20 @@ def generateConfig(fileName: str, modelName: str, naive: bool, score: bool):
     # Declare a variable to hold the DAG
     DG = None
 
+    # Declare variables to hold the LL and BIC scores
+    LL, BIC = (None, None)
+
     if naive:
-        DG = generateNaiveDAG(fileName)
+        DG = generateNaiveDAG(trainSet)
     else:
-        DG = generateDAG(fileName)
+        DG = generateDAG(trainSet)
 
     if score:
         # Get the LL and BIC scores from the DAG
-        scoreFunction(DG, fileName)
+        LL, BIC = scoreFunction(DG, trainSet)
+
+    return (LL, BIC)
 
     # Write the config file
     # TODO: Replace with dynamic path and model name
-    writeConfigFile(DG, "../config/modelConfig.txt", modelName)
+    writeConfigFile(DG, configFile, modelName)
