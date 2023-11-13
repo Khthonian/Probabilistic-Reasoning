@@ -22,7 +22,7 @@ def selectData(useContinuous: bool, useDiabetes: bool, useCardio: bool):
         else:
             trainSet = "../data/diabetes_data-discretized-train.csv"
             testSet = "../data/diabetes_data-discretized-test.csv"
-            modelName = "Discretized Diabetes Model"
+            modelName = "Discretised Diabetes Model"
     elif useCardio:
         print("You chose the cardiovascular dataset")
         if useContinuous:
@@ -32,7 +32,7 @@ def selectData(useContinuous: bool, useDiabetes: bool, useCardio: bool):
         else:
             trainSet = "../data/cardiovascular_data-discretized-train.csv"
             testSet = "../data/cardiovascular_data-discretized-test.csv"
-            modelName = "Discretized Cardiovascular Model"
+            modelName = "Discretised Cardiovascular Model"
 
     # Clean BOM from train/test set
     cleanBOM(trainSet)
