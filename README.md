@@ -16,3 +16,26 @@ This application offers two options for generating a structure for the given dat
 - PC-Stable structure learning
 
 Both of these options utilise the `networkx` library to manage the structure of the directed acyclic graphs and the nodes within.
+
+## Usage
+When using the Bayesian networks, use the `main.py` script first to setup the configuration file, then apply the configuration file and data with the inference models or model evaluator.
+
+### Example
+```
+# Running the main script, selecting the diabetes dataset, and opting to display the graph and structure scores
+python main.py -dgs
+
+# Applying inference by enumeration to the generated configuration file and data
+python BayesNetInference.py InferenceByEnumeration ../config/modelConfig.txt "P(Outcome|BMI=3,Pregnancies=4)"
+```
+
+### `BayesNetInference.py`
+The `BayesNetInference.py` script can only be applied to non-Gaussian structures.
+
+## Video
+The video can be found in the `task` directory.
+
+## Source Code 
+The source code can also be found at https://github.com/Khthonian/Probabilistic-Reasoning.
+
+
