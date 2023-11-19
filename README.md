@@ -32,9 +32,6 @@ python BayesNetInference.py InferenceByEnumeration ../config/modelConfig.txt "P(
 ### `BayesNetInference.py`
 The `BayesNetInference.py` script can only be applied to non-Gaussian structures.
 
-## Video
-The video can be found in the `task` directory.
-
 ## Source Code 
 The source code can also be found at https://github.com/Khthonian/Probabilistic-Reasoning.
 
