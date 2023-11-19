@@ -67,6 +67,10 @@ def main():
     # Generate model
     LL, BIC = generateConfig(configFile, trainSet, modelName, useNaive, useScore, useGraph)
 
+    # Allow stoppage to prune cardio structure
+    if useCardio and not useNaive:
+        input("Prune the config file. Press Enter to continue.")
+
     # Declare training time variables
     startTime, endTime = (None, None)
 
